@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>MAVE — Oversize</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-900:#11120D; --bg-700:#565449; --paper:#D8CFBC; --cream:#FFFBF4; --muted:#a9a59a; --glass:rgba(255,255,255,0.04); --max-width:1100px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:Inter,system-ui,Arial, sans-serif;background:linear-gradient(180deg,var(--bg-900),#0c0d09);color:var(--cream);-webkit-font-smoothing:antialiased}
+
+    /* Layout container */
+    .wrap{max-width:var(--max-width);margin:0 auto;padding:18px}
+
+    /* Header */
+@media(max-width:800px){
+  header .logo img{margin:auto;}
+}
+@media(min-width:801px){
+  header .logo img{margin-left:0;}
+}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .brand{display:flex;flex-direction:column}
+    .logo{font-family:'Press Start 2P',monospace;font-size:20px;color:var(--paper);letter-spacing:2px}
+    .tag{font-size:12px;color:var(--muted)}
+    nav{display:flex;gap:10px;align-items:center}
+    .nav-btn{background:none;border:1px solid transparent;color:var(--paper);padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px}
+    .nav-btn:hover{border-color:rgba(255,255,255,0.06)}
+
+    .controls{display:flex;gap:8px;align-items:center}
+    .icon-btn{background:var(--bg-700);border:1px solid rgba(255,255,255,0.03);color:var(--cream);padding:8px 10px;border-radius:8px;cursor:pointer}
+    .badge{background:var(--paper);color:var(--bg-900);padding:4px 8px;border-radius:999px;font-weight:600;margin-left:6px}
+
+    /* Mobile menu (hidden on desktop) */
+    .hamburger{display:none;background:none;border:1px solid transparent;color:var(--paper);padding:8px;border-radius:8px}
+
+    /* Hero */
+    .hero{display:flex;align-items:center;justify-content:space-between;margin:24px 0;gap:18px;flex-wrap:wrap}
+    .hero .txt{max-width:620px}
+    .hero h1{font-family:'Press Start 2P';font-size:32px;color:var(--paper);margin:0}
+    .hero p{color:var(--muted);margin-top:6px;font-size:15px}
+    .logo-box{width:220px;height:140px;border-radius:12px;background:linear-gradient(135deg,var(--paper),var(--cream));display:flex;align-items:center;justify-content:center;color:var(--bg-900);font-weight:700}
+
+    /* Grid */
+    .grid{display:grid;grid-template-columns:260px 1fr;gap:20px}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+
+    .search{display:flex;gap:8px;margin-bottom:12px}
+    .search input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--cream)}
+
+    /* Filters */
+    .category-list button{display:block;width:100%;text-align:left;padding:10px;border-radius:8px;border:none;background:none;color:var(--cream);margin-bottom:8px;cursor:pointer}
+    .category-list button.active{background:var(--paper);color:var(--bg-900)}
+    #size-filters{display:flex;gap:6px;flex-wrap:wrap}
+    #size-filters button{padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--cream);cursor:pointer}
+
+    /* Products */
+    .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+    .card{background:var(--bg-700);padding:12px;border-radius:10px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    .card .thumb{height:120px;border-radius:8px;background:linear-gradient(180deg,var(--paper),var(--cream));display:flex;align-items:center;justify-content:center;color:var(--bg-900);font-weight:700}
+    .card h4{margin:10px 0 6px 0;font-size:16px}
+    .meta{display:flex;justify-content:space-between;align-items:center}
+
+    .btn{background:var(--paper);color:var(--bg-900);border:none;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--paper)}
+
+    /* Wishlist heart (inside card) */
+    .wish-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,0.45);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--cream);cursor:pointer;z-index:5;border:1px solid rgba(255,255,255,0.03)}
+
+    /* Cart drawer (desktop) */
+    .drawer{position:fixed;right:18px;top:18px;width:360px;max-width:calc(100% - 36px);background:var(--bg-900);border:1px solid rgba(255,255,255,0.04);padding:16px;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,0.6);z-index:60}
+
+    /* Mobile drawer (bottom) */
+    .drawer-bottom{position:fixed;left:0;right:0;bottom:0;background:var(--bg-900);border-top-left-radius:12px;border-top-right-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.04);z-index:60}
+
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:70}
+    .modal{background:var(--bg-900);padding:16px;border-radius:12px;width:92%;max-width:420px;border:1px solid rgba(255,255,255,0.04)}
+
+    footer{margin-top:28px;padding:12px 0;text-align:center;color:var(--muted);font-size:13px}
+
+    /* Responsive tweaks */
+    @media(max-width:900px){
+      .products{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
+    }
+    @media(max-width:800px){
+      .grid{grid-template-columns:1fr}
+      .logo{font-size:18px}
+      nav{display:none}
+      .hamburger{display:inline-block}
+      .drawer{display:none}
+    }
+    @media(max-width:500px){
+      .hero{margin:16px 0}
+      .hero h1{font-size:22px}
+      .card .thumb{height:95px}
+      .products{gap:12px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+  <img src="WhatsApp Image 2025-11-16 at 10.22.56 PM.jpeg" alt="MAVE" style="height:48px;object-fit:contain;display:block;margin:auto;">
+</div>
+        <div class="tag">oversize — alternativa & minimal</div>
+      </div>
+
+      <button class="hamburger nav-btn" id="hambBtn" aria-label="Abrir menú">☰</button>
+
+      <nav id="mainNav">
+        <button id="btn-catalog" class="nav-btn">Catálogo</button>
+        <button id="btn-categories" class="nav-btn">Categorías</button>
+        <button id="btn-contact" class="nav-btn">Contacto</button>
+      </nav>
+
+      <div class="controls">
+        <button class="icon-btn" id="btn-wishlist">Deseados <span id="wish-count" class="badge" style="display:none">0</span></button>
+        <button class="icon-btn" id="btn-cart">Carrito <span id="cart-count" class="badge" style="display:none">0</span></button>
+        <button class="icon-btn" id="btn-login">Iniciar sesión</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="txt">
+        
+        <p>Ropa oversize con estética alternativa — simple, retro y lista para tu estilo. Catálogo con talles, stock y envío disponible.</p>
+      </div>
+      <div class="logo-box" style="background:none;">
+  <img src="WhatsApp Image 2025-11-16 at 10.22.56 PM.jpeg" alt="MAVE" style="max-width:100%;height:auto;display:block;margin:auto;">
+</div>
+    </section>
+
+    <div class="grid">
+      <aside class="panel filters" id="filtersPanel">
+        <div class="search">
+          <input id="search" placeholder="Buscar producto, ejemplo: remera" />
+          <button class="btn" id="clear-search">Limpiar</button>
+        </div>
+
+        <h3 style="color:var(--paper);margin-bottom:8px">Categorías</h3>
+        <div class="category-list" id="category-list"></div>
+
+        <h3 style="color:var(--paper);margin-top:12px;margin-bottom:8px">Filtrar por talle</h3>
+        <div id="size-filters"></div>
+
+        <div style="margin-top:14px">
+          <h3 style="color:var(--paper);margin-bottom:6px">Envíos</h3>
+          <div style="color:var(--muted);font-size:13px">Envíos a todo Argentina. Precio calculado al confirmar compra.</div>
+        </div>
+      </aside>
+
+      <main>
+        <div class="panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="small">Mostrando <span id="shown-count">0</span> productos</div>
+            <div>
+              <select id="sort" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--cream)">
+                <option value="default">Orden</option>
+                <option value="price-asc">Precio ↑</option>
+                <option value="price-desc">Precio ↓</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="products" id="products"></div>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <div>MAVE © <span id="year"></span> — Todos los derechos reservados.</div>
+      <div style="margin-top:6px;color:var(--muted);font-size:13px">Contacto: mave.store.example@gmail.com — Tel: +54 9 261 123-4567 — Dirección: Mendoza, Argentina</div>
+    </footer>
+  </div>
+
+  <!-- Drawer container (rendered by JS) -->
+  <div id="drawer-root" style="display:none"></div>
+
+  <!-- Modal root -->
+  <div id="modal-root" style="display:none"></div>
+
+  <script>
+    // --- sample product data ---
+    const PRODUCTS = [
+      {id:1,name:'Remera Oversize "Void"',price:5290,category:'Remeras',sizes:['S','M','L','XL'],stock:{'S':10,'M':12,'L':8,'XL':6},desc:'Remera oversize de algodón 250g.'},
+      {id:2,name:'Buzo Oversize "Haze"',price:12990,category:'Buzos',sizes:['M','L','XL'],stock:{'M':5,'L':5,'XL':3},desc:'Buzo con capucha, interior afelpado.'},
+      {id:3,name:'Pantalón Oversize "Drift"',price:8990,category:'Pantalones',sizes:['S','M','L','XL'],stock:{'S':6,'M':8,'L':6,'XL':4},desc:'Pantalón cargo oversize con muchos bolsillos.'},
+      {id:4,name:'Camisa Oversize "Rust"',price:6990,category:'Camisas',sizes:['S','M','L'],stock:{'S':4,'M':6,'L':2},desc:'Camisa estilo retro, corte oversize.'},
+      {id:5,name:'Remera Oversize "Neon"',price:4690,category:'Remeras',sizes:['S','M','L','XL'],stock:{'S':7,'M':12,'L':9,'XL':5},desc:'Remera con estampado minimal.'}
+    ];
+
+    // --- state ---
+    let state = {
+      products: PRODUCTS.slice(),
+      filterCategory: 'Todos',
+      filterSize: null,
+      search: '',
+      sort: 'default',
+      cart: JSON.parse(localStorage.getItem('mave_cart')||'[]'),
+      wishlist: JSON.parse(localStorage.getItem('mave_wish')||'[]'),
+      user: JSON.parse(localStorage.getItem('mave_user')||'null')
+    };
+
+    // init
+    document.getElementById('year').innerText = new Date().getFullYear();
+
+    // build categories
+    const categories = ['Todos', ...new Set(PRODUCTS.map(p=>p.category))];
+    const catList = document.getElementById('category-list');
+    categories.forEach(cat=>{
+      const btn = document.createElement('button'); btn.innerText = cat; btn.dataset.cat = cat; btn.className='';
+      if(cat==='Todos') btn.classList.add('active');
+      btn.addEventListener('click', ()=>{ document.querySelectorAll('.category-list button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); state.filterCategory=cat; renderProducts(); });
+      catList.appendChild(btn);
+    });
+
+    // sizes
+    const sizes = ['S','M','L','XL'];
+    const sizeFilters = document.getElementById('size-filters');
+    sizes.forEach(s=>{ const b = document.createElement('button'); b.innerText = s; b.addEventListener('click', ()=>{ if(state.filterSize===s) state.filterSize=null; else state.filterSize=s; document.querySelectorAll('#size-filters button').forEach(x=>x.classList.remove('active')); if(state.filterSize){b.classList.add('active')} renderProducts(); }); sizeFilters.appendChild(b); });
+
+    // controls
+    document.getElementById('search').addEventListener('input',(e)=>{state.search=e.target.value; renderProducts();});
+    document.getElementById('clear-search').addEventListener('click',()=>{document.getElementById('search').value='';state.search='';renderProducts();});
+    document.getElementById('sort').addEventListener('change',(e)=>{state.sort=e.target.value; renderProducts();});
+    document.getElementById('btn-cart').addEventListener('click',toggleDrawer);
+    document.getElementById('btn-wishlist').addEventListener('click',openWishlist);
+    document.getElementById('btn-login').addEventListener('click',openLogin);
+
+    document.getElementById('hambBtn').addEventListener('click', ()=>{ const n = document.getElementById('mainNav'); if(n.style.display==='flex') n.style.display='none'; else n.style.display='flex'; });
+
+    // render products
+    function renderProducts(){
+      let list = state.products.slice();
+      if(state.filterCategory && state.filterCategory!=='Todos') list = list.filter(p=>p.category===state.filterCategory);
+      if(state.filterSize) list = list.filter(p=>p.sizes.includes(state.filterSize));
+      if(state.search) list = list.filter(p=> (p.name+p.desc+p.category).toLowerCase().includes(state.search.toLowerCase()));
+      if(state.sort==='price-asc') list.sort((a,b)=>a.price-b.price);
+      if(state.sort==='price-desc') list.sort((a,b)=>b.price-a.price);
+
+      document.getElementById('shown-count').innerText = list.length;
+      const container = document.getElementById('products'); container.innerHTML='';
+
+      list.forEach(p=>{
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <button class="wish-btn" data-id="${p.id}" aria-label="Agregar a deseados">♡</button>
+          <div class="thumb">${p.name.split(' ')[0]}</div>
+          <div>
+            <h4>${p.name}</h4>
+            <div class="small">${p.category} · <strong>$${p.price.toLocaleString()}</strong></div>
+            <p class="small" style="margin-top:8px">${p.desc}</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:8px">
+            <div style="display:flex;gap:6px;align-items:center">
+              <select data-id="${p.id}" class="size-select">
+                ${p.sizes.map(s=>`<option value="${s}">${s} (${p.stock[s]||0})</option>`).join('')}
+              </select>
+              <input type="number" min="1" value="1" class="qty-input" style="width:64px;padding:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--cream)">
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn add-cart" data-id="${p.id}">Añadir</button>
+              <button class="btn ghost add-wish" data-id="${p.id}">❤</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      // listeners after render
+      document.querySelectorAll('.add-cart').forEach(b=>b.addEventListener('click',onAddCart));
+      document.querySelectorAll('.add-wish').forEach(b=>b.addEventListener('click',onToggleWish));
+      document.querySelectorAll('.wish-btn').forEach(b=>b.addEventListener('click',onToggleWishFromBtn));
+
+      updateCounts();
+    }
+
+    function onAddCart(e){
+      const id = Number(e.currentTarget.dataset.id);
+      const parent = e.currentTarget.closest('.card');
+      const size = parent.querySelector('.size-select').value;
+      const qty = Number(parent.querySelector('.qty-input').value || 1);
+      addToCart(id,size,qty);
+    }
+    function onToggleWish(e){ const id=Number(e.currentTarget.dataset.id); toggleWish(id); }
+    function onToggleWishFromBtn(e){ const id=Number(e.currentTarget.dataset.id); toggleWish(id); e.currentTarget.classList.toggle('active'); }
+
+    function addToCart(id,size,qty){
+      const prod = PRODUCTS.find(p=>p.id===id);
+      const available = prod.stock[size]||0;
+      if(qty>available){alert('No hay stock suficiente.');return}
+      const found = state.cart.find(it=>it.id===id && it.size===size);
+      if(found) { found.qty += qty; }
+      else state.cart.push({id,size,qty});
+      prod.stock[size] -= qty;
+      saveState(); renderProducts(); openDrawer();
+    }
+
+    function toggleWish(id){
+      const idx = state.wishlist.indexOf(id);
+      if(idx>=0) state.wishlist.splice(idx,1); else state.wishlist.push(id);
+      saveState(); updateCounts();
+      // non-blocking toast alternative
+      const msg = state.wishlist.includes(id)?'Añadido a deseados':'Eliminado de deseados';
+      console.log(msg);
+    }
+
+    function saveState(){ localStorage.setItem('mave_cart', JSON.stringify(state.cart)); localStorage.setItem('mave_wish', JSON.stringify(state.wishlist)); }
+
+    function updateCounts(){
+      const cc = state.cart.reduce((s,i)=>s+i.qty,0);
+      const wc = state.wishlist.length;
+      const ccEl = document.getElementById('cart-count');
+      const wcEl = document.getElementById('wish-count');
+      if(cc>0){ccEl.style.display='inline-block';ccEl.innerText = cc}else ccEl.style.display='none';
+      if(wc>0){wcEl.style.display='inline-block';wcEl.innerText = wc}else wcEl.style.display='none';
+    }
+
+    // Drawer
+    function toggleDrawer(){ const root = document.getElementById('drawer-root'); if(root.style.display==='block'){root.style.display='none';root.innerHTML=''} else openDrawer(); }
+
+    function openDrawer(){
+      const root = document.getElementById('drawer-root'); root.style.display='block';
+      const isMobile = window.matchMedia('(max-width:800px)').matches;
+      root.innerHTML = isMobile ? mobileDrawerHtml() : desktopDrawerHtml();
+      // events
+      const close = document.getElementById('close-drawer'); if(close) close.addEventListener('click',()=>{root.style.display='none';root.innerHTML=''});
+      document.getElementById('checkout')?.addEventListener('click',checkout);
+      renderCartList();
+    }
+
+    function desktopDrawerHtml(){
+      return `
+        <div class="drawer" role="dialog">
+          <h3>Tu carrito</h3>
+          <div id="cart-list"></div>
+          <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center"><div class="small">Total</div><div id="cart-total" style="font-weight:700">$0</div></div>
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end"><button class="btn ghost" id="close-drawer">Cerrar</button><button class="btn" id="checkout">Comprar</button></div>
+        </div>
+      `;
+    }
+    function mobileDrawerHtml(){
+      return `
+        <div class="drawer-bottom">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>Tu carrito</strong><button class="btn ghost" id="close-drawer">Cerrar</button></div>
+          <div id="cart-list"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px"><div>Total</div><div id="cart-total" style="font-weight:700">$0</div></div>
+          <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" id="checkout" style="flex:1">Comprar</button></div>
+        </div>
+      `;
+    }
+
+    function renderCartList(){
+      const el = document.getElementById('cart-list'); if(!el) return; el.innerHTML='';
+      let total = 0;
+      state.cart.forEach((item,idx)=>{
+        const prod = PRODUCTS.find(p=>p.id===item.id);
+        const price = prod.price * item.qty; total += price;
+        const div = document.createElement('div'); div.className='cart-item';
+        div.style.display='flex';div.style.gap='10px';div.style.alignItems='center';div.style.marginBottom='10px';
+        div.innerHTML = `
+          <div style="width:56px;height:56px;border-radius:8px;background:linear-gradient(180deg,var(--paper),var(--cream));display:flex;align-items:center;justify-content:center;color:var(--bg-900);font-weight:700">${prod.name.split(' ')[0]}</div>
+          <div style="flex:1">
+            <div style="display:flex;justify-content:space-between"><div style="font-size:14px">${prod.name} <span style="font-size:12px;color:var(--muted)">(${item.size})</span></div><div style="font-weight:700">$${price.toLocaleString()}</div></div>
+            <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+              <div style="display:flex;align-items:center;gap:8px">
+                <button data-idx="${idx}" class="qty-dec" style="width:30px;height:30px;border-radius:6px;border:none;background:var(--bg-700);color:var(--cream);cursor:pointer">-</button>
+                <div style="min-width:24px;text-align:center">${item.qty}</div>
+                <button data-idx="${idx}" class="qty-inc" style="width:30px;height:30px;border-radius:6px;border:none;background:var(--bg-700);color:var(--cream);cursor:pointer">+</button>
+              </div>
+              <button data-idx="${idx}" class="btn ghost del" style="font-size:12px">Eliminar</button>
+            </div>
+          </div>
+        `;
+        el.appendChild(div);
+      });
+      document.getElementById('cart-total').innerText = `$${total.toLocaleString()}`;
+      // listeners
+      document.querySelectorAll('.qty-inc').forEach(b=>b.addEventListener('click',e=>{ const i=Number(e.currentTarget.dataset.idx); incQty(i); }));
+      document.querySelectorAll('.qty-dec').forEach(b=>b.addEventListener('click',e=>{ const i=Number(e.currentTarget.dataset.idx); decQty(i); }));
+      document.querySelectorAll('.del').forEach(b=>b.addEventListener('click',e=>{ const i=Number(e.currentTarget.dataset.idx); removeItem(i); }));
+    }
+
+    function incQty(i){ const it = state.cart[i]; const prod = PRODUCTS.find(p=>p.id===it.id); if(prod.stock[it.size]<=0){alert('no hay más stock');return} it.qty++; prod.stock[it.size]--; saveState(); renderCartList(); renderProducts(); updateCounts(); }
+    function decQty(i){ const it = state.cart[i]; if(it.qty<=1) return removeItem(i); it.qty--; const prod = PRODUCTS.find(p=>p.id===it.id); prod.stock[it.size]++; saveState(); renderCartList(); renderProducts(); updateCounts(); }
+    function removeItem(i){ const it = state.cart[i]; const prod = PRODUCTS.find(p=>p.id===it.id); prod.stock[it.size] += it.qty; state.cart.splice(i,1); saveState(); renderCartList(); renderProducts(); updateCounts(); }
+
+    function checkout(){
+      if(!state.user){ if(confirm('Necesitas iniciar sesión para comprar. Crear cuenta ahora?')){openLogin();} return; }
+      if(state.cart.length===0){alert('El carrito está vacío.');return}
+      const order = {id:Date.now(),user:state.user.email,items:state.cart, total: state.cart.reduce((s,i)=>s + PRODUCTS.find(p=>p.id===i.id).price*i.qty,0)};
+      localStorage.setItem('mave_last_order', JSON.stringify(order));
+      alert('Compra simulada. Gracias. Pedido ID: '+order.id);
+      state.cart=[]; saveState(); renderCartList(); renderProducts(); updateCounts(); document.getElementById('drawer-root').style.display='none';
+    }
+
+    // Wishlist view (simple)
+    function openWishlist(){ const ids = state.wishlist; if(ids.length===0){ alert('No hay productos en Deseados'); return } const list = ids.map(id=>PRODUCTS.find(p=>p.id===id)); let txt = 'Deseados:\n\n'; list.forEach(p=> txt += `${p.name} - $${p.price}\n`); alert(txt); }
+
+    // Login modal (localStorage demo)
+    function openLogin(){ const root = document.getElementById('modal-root'); root.style.display='block'; root.innerHTML = `
+      <div class="modal-backdrop">
+        <div class="modal">
+          <h3>${state.user? 'Mi cuenta' : 'Crear / ingresar'}</h3>
+          <div class="form-row"><input id="u-name" placeholder="Nombre" value="${state.user?state.user.name:''}" /></div>
+          <div class="form-row"><input id="u-email" placeholder="Email" value="${state.user?state.user.email:''}" /></div>
+          <div class="form-row"><input id="u-pass" placeholder="Contraseña" type="password" /></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn ghost" id="close-modal">Cancelar</button><button class="btn" id="save-user">Guardar</button></div>
+          <div style="margin-top:10px;color:var(--muted);font-size:13px">Cuenta demo guardada solo en tu navegador (localStorage).</div>
+        </div>
+      </div>
+    `;
+      document.getElementById('close-modal').addEventListener('click',()=>{root.style.display='none';root.innerHTML='';});
+      document.getElementById('save-user').addEventListener('click',()=>{ const name = document.getElementById('u-name').value || 'Cliente'; const email = document.getElementById('u-email').value || 'mave.store.example@gmail.com'; state.user = {name,email}; localStorage.setItem('mave_user', JSON.stringify(state.user)); alert('Cuenta guardada: '+email); root.style.display='none';root.innerHTML=''; updateCounts(); });
+    }
+
+    // persist
+    function saveState(){ localStorage.setItem('mave_cart', JSON.stringify(state.cart)); localStorage.setItem('mave_wish', JSON.stringify(state.wishlist)); }
+
+    // helpers
+    function renderInitial(){ renderProducts(); updateCounts(); }
+
+    // initial render
+    renderInitial();
+
+    // expose some functions for debug
+    window.openDrawer = openDrawer;
+    window.toggleDrawer = toggleDrawer;
+    window.openLogin = openLogin;
+    window.openWishlist = openWishlist;
+  </script>
+</body>
+</html>
